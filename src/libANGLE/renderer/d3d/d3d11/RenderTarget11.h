@@ -104,7 +104,7 @@ class TextureRenderTarget11 : public RenderTarget11
 class SurfaceRenderTarget11 : public RenderTarget11
 {
   public:
-    SurfaceRenderTarget11(SwapChain11 *swapChain, Renderer11 *renderer, bool depth);
+    SurfaceRenderTarget11(SwapChain11 *swapChain, Renderer11 *renderer, bool depth, GLuint samples);
     virtual ~SurfaceRenderTarget11();
 
     GLsizei getWidth() const override;
@@ -124,6 +124,7 @@ class SurfaceRenderTarget11 : public RenderTarget11
   private:
     SwapChain11 *mSwapChain;
     bool mDepth;
+	GLuint mSamples;
 };
 
 }  // namespace rx

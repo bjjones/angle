@@ -916,6 +916,20 @@ void Renderer11::populateRenderer11DeviceCaps()
     {
         mRenderer11DeviceCaps.B5G5R5A1support = 0;
     }
+	
+	egl::DisplayExtensions *outExtensions = new egl::DisplayExtensions();
+	this->generateDisplayExtensions(outExtensions);
+	
+	if (mRenderer11DeviceCaps.featureLevel > D3D_FEATURE_LEVEL_10_0 && outExtensions->d3dTextureClientBuffer)
+	{
+		mRenderer11DeviceCaps.swapChainSampleDesc.Count = 2; 
+		mRenderer11DeviceCaps.swapChainSampleDesc.Quality = 0; //setting to 0 for now
+	}
+	else
+	{
+		mRenderer11DeviceCaps.swapChainSampleDesc.Count = 1;
+		mRenderer11DeviceCaps.swapChainSampleDesc.Quality = 0;
+	}
 
     IDXGIAdapter2 *dxgiAdapter2 = d3d11::DynamicCastComObject<IDXGIAdapter2>(mDxgiAdapter);
     mRenderer11DeviceCaps.supportsDXGI1_2 = (dxgiAdapter2 != nullptr);
@@ -1281,7 +1295,7 @@ SwapChainD3D *Renderer11::createSwapChain(NativeWindowD3D *nativeWindow,
                                           EGLint orientation)
 {
     return new SwapChain11(this, GetAs<NativeWindow11>(nativeWindow), shareHandle, d3dTexture,
-                           backBufferFormat, depthBufferFormat, orientation);
+                           backBufferFormat, depthBufferFormat, orientation, mRenderer11DeviceCaps.swapChainSampleDesc);
 }
 
 void *Renderer11::getD3DDevice()
@@ -3247,7 +3261,9 @@ gl::Error Renderer11::createRenderTarget(int width,
     const d3d11::Format &formatInfo = d3d11::Format::Get(format, mRenderer11DeviceCaps);
 
     const gl::TextureCaps &textureCaps = getNativeTextureCaps().get(format);
-    GLuint supportedSamples            = textureCaps.getNearestSamples(samples);
+
+	GLuint supportedSamples = (mRenderer11DeviceCaps.swapChainSampleDesc.Count != 1) ? 
+		mRenderer11DeviceCaps.swapChainSampleDesc.Count : textureCaps.getNearestSamples(samples);
 
     if (width > 0 && height > 0)
     {

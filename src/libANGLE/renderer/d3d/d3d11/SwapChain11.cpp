@@ -48,7 +48,8 @@ SwapChain11::SwapChain11(Renderer11 *renderer,
                          IUnknown *d3dTexture,
                          GLenum backBufferFormat,
                          GLenum depthBufferFormat,
-                         EGLint orientation)
+                         EGLint orientation,
+						 DXGI_SAMPLE_DESC sampleDesc)
     : SwapChainD3D(shareHandle, d3dTexture, backBufferFormat, depthBufferFormat),
       mRenderer(renderer),
       mWidth(-1),
@@ -78,8 +79,9 @@ SwapChain11::SwapChain11(Renderer11 *renderer,
       mPassThroughVS(nullptr),
       mPassThroughPS(nullptr),
       mPassThroughRS(nullptr),
-      mColorRenderTarget(this, renderer, false),
-      mDepthStencilRenderTarget(this, renderer, true)
+      mColorRenderTarget(this, renderer, false, mSampleDesc.Count),
+      mDepthStencilRenderTarget(this, renderer, true, mSampleDesc.Count),
+	  mSampleDesc(sampleDesc)
 {
     // Sanity check that if present path fast is active then we're using the default orientation
     ASSERT(!mRenderer->presentPathFastEnabled() || orientation == 0);
@@ -216,8 +218,8 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
         offscreenTextureDesc.Format               = backbufferFormatInfo.texFormat;
         offscreenTextureDesc.MipLevels = 1;
         offscreenTextureDesc.ArraySize = 1;
-        offscreenTextureDesc.SampleDesc.Count = 1;
-        offscreenTextureDesc.SampleDesc.Quality = 0;
+        offscreenTextureDesc.SampleDesc.Count = mSampleDesc.Count;
+        offscreenTextureDesc.SampleDesc.Quality = mSampleDesc.Quality;
         offscreenTextureDesc.Usage = D3D11_USAGE_DEFAULT;
         offscreenTextureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
         offscreenTextureDesc.CPUAccessFlags = 0;
@@ -272,7 +274,7 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
 
     D3D11_RENDER_TARGET_VIEW_DESC offscreenRTVDesc;
     offscreenRTVDesc.Format             = backbufferFormatInfo.rtvFormat;
-    offscreenRTVDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+    offscreenRTVDesc.ViewDimension = (mSampleDesc.Count == 1) ? D3D11_RTV_DIMENSION_TEXTURE2D : D3D11_RTV_DIMENSION_TEXTURE2DMS;
     offscreenRTVDesc.Texture2D.MipSlice = 0;
 
     HRESULT result = device->CreateRenderTargetView(mOffscreenTexture, &offscreenRTVDesc, &mOffscreenRTView);
@@ -281,7 +283,7 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
 
     D3D11_SHADER_RESOURCE_VIEW_DESC offscreenSRVDesc;
     offscreenSRVDesc.Format                    = backbufferFormatInfo.srvFormat;
-    offscreenSRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    offscreenSRVDesc.ViewDimension = (mSampleDesc.Count == 1) ? D3D11_SRV_DIMENSION_TEXTURE2D : D3D11_SRV_DIMENSION_TEXTURE2DMS;
     offscreenSRVDesc.Texture2D.MostDetailedMip = 0;
     offscreenSRVDesc.Texture2D.MipLevels = static_cast<UINT>(-1);
 
@@ -330,8 +332,8 @@ EGLint SwapChain11::resetOffscreenDepthBuffer(int backbufferWidth, int backbuffe
         depthStencilTextureDesc.Format             = depthBufferFormatInfo.texFormat;
         depthStencilTextureDesc.MipLevels = 1;
         depthStencilTextureDesc.ArraySize = 1;
-        depthStencilTextureDesc.SampleDesc.Count = 1;
-        depthStencilTextureDesc.SampleDesc.Quality = 0;
+        depthStencilTextureDesc.SampleDesc.Count = mSampleDesc.Count;
+        depthStencilTextureDesc.SampleDesc.Quality = mSampleDesc.Quality;
         depthStencilTextureDesc.Usage = D3D11_USAGE_DEFAULT;
         depthStencilTextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 
@@ -364,7 +366,7 @@ EGLint SwapChain11::resetOffscreenDepthBuffer(int backbufferWidth, int backbuffe
 
         D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilDesc;
         depthStencilDesc.Format             = depthBufferFormatInfo.dsvFormat;
-        depthStencilDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+        depthStencilDesc.ViewDimension = (mSampleDesc.Count == 1) ? D3D11_DSV_DIMENSION_TEXTURE2D : D3D11_DSV_DIMENSION_TEXTURE2DMS;
         depthStencilDesc.Flags = 0;
         depthStencilDesc.Texture2D.MipSlice = 0;
 
@@ -376,7 +378,7 @@ EGLint SwapChain11::resetOffscreenDepthBuffer(int backbufferWidth, int backbuffe
         {
             D3D11_SHADER_RESOURCE_VIEW_DESC depthStencilSRVDesc;
             depthStencilSRVDesc.Format                    = depthBufferFormatInfo.srvFormat;
-            depthStencilSRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+            depthStencilSRVDesc.ViewDimension = (mSampleDesc.Count == 1) ? D3D11_SRV_DIMENSION_TEXTURE2D : D3D11_SRV_DIMENSION_TEXTURE2DMS;
             depthStencilSRVDesc.Texture2D.MostDetailedMip = 0;
             depthStencilSRVDesc.Texture2D.MipLevels = static_cast<UINT>(-1);
 
@@ -517,6 +519,8 @@ EGLint SwapChain11::reset(EGLint backbufferWidth, EGLint backbufferHeight, EGLin
 
     if (mNativeWindow->getNativeWindow())
     {
+		mNativeWindow->setSampleDesc(mSampleDesc);
+
         HRESULT result = mNativeWindow->createSwapChain(device, mRenderer->getDxgiFactory(),
                                                         getSwapChainNativeFormat(), backbufferWidth,
                                                         backbufferHeight, &mSwapChain);

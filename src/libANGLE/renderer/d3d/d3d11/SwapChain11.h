@@ -27,7 +27,8 @@ class SwapChain11 final : public SwapChainD3D
                 IUnknown *d3dTexture,
                 GLenum backBufferFormat,
                 GLenum depthBufferFormat,
-                EGLint orientation);
+                EGLint orientation,
+				DXGI_SAMPLE_DESC sampleDesc);
     virtual ~SwapChain11();
 
     EGLint resize(EGLint backbufferWidth, EGLint backbufferHeight);
@@ -72,6 +73,7 @@ class SwapChain11 final : public SwapChainD3D
     bool mAppCreatedShareHandle;
     unsigned int mSwapInterval;
     bool mPassThroughResourcesInit;
+	DXGI_SAMPLE_DESC mSampleDesc;
 
     NativeWindow11 *mNativeWindow;  // Handler for the Window that the surface is created for.
 

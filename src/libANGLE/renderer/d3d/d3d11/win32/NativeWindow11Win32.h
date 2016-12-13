@@ -38,6 +38,8 @@ class NativeWindow11Win32 : public NativeWindow11
     void commitChange() override;
 
     static bool IsValidNativeWindow(EGLNativeWindowType window);
+	void setSampleDesc(DXGI_SAMPLE_DESC sampleDesc);
+
 
   private:
     bool mDirectComposition;
@@ -45,6 +47,8 @@ class NativeWindow11Win32 : public NativeWindow11
     IDCompositionDevice *mDevice;
     IDCompositionTarget *mCompositionTarget;
     IDCompositionVisual *mVisual;
+	DXGI_SAMPLE_DESC mSampleDesc;
+
 };
 
 }  // namespace rx

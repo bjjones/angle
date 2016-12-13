@@ -371,10 +371,11 @@ unsigned int TextureRenderTarget11::getSubresourceIndex() const
 
 SurfaceRenderTarget11::SurfaceRenderTarget11(SwapChain11 *swapChain,
                                              Renderer11 *renderer,
-                                             bool depth)
+                                             bool depth, GLuint samples)
     : RenderTarget11(GetSurfaceFormatSet(depth, swapChain, renderer)),
       mSwapChain(swapChain),
-      mDepth(depth)
+      mDepth(depth),
+	  mSamples(samples)
 {
     ASSERT(mSwapChain);
 }
@@ -406,7 +407,7 @@ GLenum SurfaceRenderTarget11::getInternalFormat() const
 GLsizei SurfaceRenderTarget11::getSamples() const
 {
     // Our EGL surfaces do not support multisampling.
-    return 0;
+    return mSamples;
 }
 
 ID3D11Resource *SurfaceRenderTarget11::getTexture() const

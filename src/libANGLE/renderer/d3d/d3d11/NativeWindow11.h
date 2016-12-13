@@ -31,6 +31,7 @@ class NativeWindow11 : public NativeWindowD3D
                                     UINT height,
                                     IDXGISwapChain **swapChain) = 0;
     virtual void commitChange() = 0;
+	virtual void setSampleDesc(DXGI_SAMPLE_DESC sampleDesc) = 0;
 };
 }  // namespace rx
 
