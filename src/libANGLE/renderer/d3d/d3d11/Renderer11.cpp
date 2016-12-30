@@ -3555,7 +3555,7 @@ gl::Error Renderer11::loadExecutable(const void *function,
 }
 
 gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
-                                          const std::string &shaderHLSL,
+                                          std::string &shaderHLSL,
                                           ShaderType type,
                                           const std::vector<D3DVarying> &streamOutVaryings,
                                           bool separatedOutputBuffers,
@@ -3563,6 +3563,30 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
                                           ShaderExecutableD3D **outExectuable)
 {
     std::stringstream profileStream;
+
+
+	if (mRenderer11DeviceCaps.swapChainSampleDesc.Count != 1)
+	{
+
+		size_t pos = 0;
+
+		std::string str = "yes";
+
+		while (pos != -1)
+		{
+			if (pos != 0)
+			{
+				//insert MS after Texture2D
+				shaderHLSL.insert(pos + 9, "MS");
+
+				pos = shaderHLSL.find("]", pos);
+				//add sampling parameter to first ] after Texture2DMS
+				shaderHLSL.insert(pos, ",");
+				shaderHLSL.insert(pos + 1, std::to_string(mRenderer11DeviceCaps.swapChainSampleDesc.Count));
+			}
+			pos = shaderHLSL.find("exture2D ", pos);
+		}
+	}
 
     switch (type)
     {

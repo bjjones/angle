@@ -245,7 +245,7 @@ class Renderer11 : public RendererD3D
                              bool separatedOutputBuffers,
                              ShaderExecutableD3D **outExecutable) override;
     gl::Error compileToExecutable(gl::InfoLog &infoLog,
-                                  const std::string &shaderHLSL,
+                                  std::string &shaderHLSL,
                                   ShaderType type,
                                   const std::vector<D3DVarying> &streamOutVaryings,
                                   bool separatedOutputBuffers,

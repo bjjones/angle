@@ -291,7 +291,7 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mOffscreenSRView, "Offscreen back buffer shader resource");
 
-    if (previousOffscreenTexture != nullptr)
+    if (previousOffscreenTexture != nullptr && mSampleDesc.Count == 1)
     {
         D3D11_BOX sourceBox = {0};
         sourceBox.left      = 0;

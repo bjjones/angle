@@ -1068,7 +1068,7 @@ const char *TextureFunctionHLSL::TextureFunction::getReturnType() const
             case EbtSampler2D:
             case EbtSampler3D:
             case EbtSamplerCube:
-            case EbtSampler2DArray:
+			case EbtSampler2DArray:
             case EbtSamplerExternalOES:
                 return "float4";
             case EbtISampler2D:

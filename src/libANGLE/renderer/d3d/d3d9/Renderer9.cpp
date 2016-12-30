@@ -2616,7 +2616,7 @@ gl::Error Renderer9::loadExecutable(const void *function,
 }
 
 gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog,
-                                         const std::string &shaderHLSL,
+                                         std::string &shaderHLSL,
                                          ShaderType type,
                                          const std::vector<D3DVarying> &streamOutVaryings,
                                          bool separatedOutputBuffers,
