@@ -2454,6 +2454,12 @@ void Context::initCaps(bool webGLContext)
 
     // WebGL compatibility
     mExtensions.webglCompatibility = webGLContext;
+
+	if (webGLContext)
+	{
+		mCaps.maxDrawBuffers = 1;
+	}
+
     for (const auto &extensionInfo : GetExtensionInfoMap())
     {
         // If this context is for WebGL, disable all enableable extensions
