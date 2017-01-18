@@ -2478,6 +2478,13 @@ void Context::updateCaps()
     mCaps.compressedTextureFormats.clear();
     mTextureCaps.clear();
 
+	if (mExtensions.drawBuffers)
+	{
+		Caps nativeCaps = mImplementation->getNativeCaps();
+		mCaps.maxDrawBuffers = nativeCaps.maxDrawBuffers;
+		mCaps.maxColorAttachments = nativeCaps.maxColorAttachments;
+	}
+
     const TextureCapsMap &rendererFormats = mImplementation->getNativeTextureCaps();
     for (TextureCapsMap::const_iterator i = rendererFormats.begin(); i != rendererFormats.end(); i++)
     {

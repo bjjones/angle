@@ -122,7 +122,7 @@ HRESULT NativeWindow11Win32::createSwapChain(ID3D11Device *device,
         swapChainDesc.Format                = format;
         swapChainDesc.Stereo                = FALSE;
 		swapChainDesc.SampleDesc.Count      = mSampleDesc.Count;
-        swapChainDesc.SampleDesc.Quality    = mSampleDesc.Quality;
+		swapChainDesc.SampleDesc.Quality    = mSampleDesc.Quality;
         swapChainDesc.BufferUsage =
             DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_BACK_BUFFER | DXGI_USAGE_SHADER_INPUT;
         swapChainDesc.BufferCount = 2;
@@ -154,8 +154,8 @@ HRESULT NativeWindow11Win32::createSwapChain(ID3D11Device *device,
         swapChainDesc.Height                = height;
         swapChainDesc.Format                = format;
         swapChainDesc.Stereo                = FALSE;
-		swapChainDesc.SampleDesc.Count      = mSampleDesc.Count;
-		swapChainDesc.SampleDesc.Quality    = mSampleDesc.Quality;
+		swapChainDesc.SampleDesc.Count		= mSampleDesc.Count;
+		swapChainDesc.SampleDesc.Quality	= mSampleDesc.Quality;
         swapChainDesc.BufferUsage =
             DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_SHADER_INPUT | DXGI_USAGE_BACK_BUFFER;
         swapChainDesc.BufferCount   = 1;

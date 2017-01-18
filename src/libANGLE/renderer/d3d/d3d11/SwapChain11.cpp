@@ -21,6 +21,7 @@
 // Precompiled shaders
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/passthrough2d11vs.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/passthroughrgba2d11ps.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/passthroughrgba2dms11ps.h"
 
 #ifdef ANGLE_ENABLE_KEYEDMUTEX
 #define ANGLE_RESOURCE_SHARE_TYPE D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX
@@ -177,7 +178,7 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
     }
     const int previousWidth = mWidth;
     const int previousHeight = mHeight;
-
+	
     releaseOffscreenColorBuffer();
 
     const d3d11::Format &backbufferFormatInfo =
@@ -291,7 +292,7 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mOffscreenSRView, "Offscreen back buffer shader resource");
 
-    if (previousOffscreenTexture != nullptr && mSampleDesc.Count == 1)
+    if (previousOffscreenTexture != nullptr && mSampleDesc.Count==1)
     {
         D3D11_BOX sourceBox = {0};
         sourceBox.left      = 0;
@@ -624,7 +625,16 @@ void SwapChain11::initPassThroughResources()
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mPassThroughVS, "Swap chain pass through vertex shader");
 
-    result = device->CreatePixelShader(g_PS_PassthroughRGBA2D, sizeof(g_PS_PassthroughRGBA2D), NULL, &mPassThroughPS);
+
+	if (mSampleDesc.Count != 1) 
+	{
+		result = device->CreatePixelShader(g_PS_PassthroughRGBA2DMS, sizeof(g_PS_PassthroughRGBA2DMS), NULL, &mPassThroughPS);
+	}
+	else
+	{
+		result = device->CreatePixelShader(g_PS_PassthroughRGBA2D, sizeof(g_PS_PassthroughRGBA2D), NULL, &mPassThroughPS);
+	}
+
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mPassThroughPS, "Swap chain pass through pixel shader");
 

@@ -23,6 +23,7 @@ if "%1" == "release" (
 ::              | Input file         | Entry point            | Type            | Output file                        | Debug |
 call:BuildShader Passthrough2D11.hlsl VS_Passthrough2D         vs_4_0_level_9_3  compiled\passthrough2d11vs.h         %debug%
 call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBA2D     ps_4_0_level_9_3  compiled\passthroughrgba2d11ps.h     %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBA2DMS   ps_5_0            compiled\passthroughrgba2dms11ps.h   %debug%
 call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGB2D      ps_4_0_level_9_3  compiled\passthroughrgb2d11ps.h      %debug%
 call:BuildShader Passthrough2D11.hlsl PS_PassthroughRG2D       ps_4_0_level_9_3  compiled\passthroughrg2d11ps.h       %debug%
 call:BuildShader Passthrough2D11.hlsl PS_PassthroughR2D        ps_4_0_level_9_3  compiled\passthroughr2d11ps.h        %debug%
@@ -37,7 +38,6 @@ call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBUnmultiply2D   ps_4_0_lev
 call:BuildShader Clear11.hlsl         VS_ClearFloat            vs_4_0_level_9_3  compiled\clearfloat11vs.h            %debug%
 call:BuildShader Clear11.hlsl         PS_ClearFloat_FL9        ps_4_0_level_9_3  compiled\clearfloat11_fl9ps.h        %debug%
 call:BuildShader Clear11.hlsl         PS_ClearFloat            ps_4_0            compiled\clearfloat11ps.h            %debug%
-
 
 :: Shaders for OpenGL ES 3.0+ only
 ::              | Input file               | Entry point            | Type   | Output file                        | Debug |
