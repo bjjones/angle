@@ -246,7 +246,7 @@ class Renderer9 : public RendererD3D
                                   const std::vector<D3DVarying> &streamOutVaryings,
                                   bool separatedOutputBuffers,
                                   const D3DCompilerWorkarounds &workarounds,
-                                  ShaderExecutableD3D **outExectuable);
+                                  ShaderExecutableD3D **outExectuable) override;
     gl::Error ensureHLSLCompilerInitialized() override;
 
     UniformStorageD3D *createUniformStorage(size_t storageSize) override;
