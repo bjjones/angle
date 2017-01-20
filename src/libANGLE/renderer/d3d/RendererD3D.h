@@ -187,7 +187,7 @@ class RendererD3D : public BufferFactoryD3D
                                      bool separatedOutputBuffers,
                                      ShaderExecutableD3D **outExecutable) = 0;
     virtual gl::Error compileToExecutable(gl::InfoLog &infoLog,
-                                          std::string &shaderHLSL,
+                                          const std::string &shaderHLSL,
                                           ShaderType type,
                                           const std::vector<D3DVarying> &streamOutVaryings,
                                           bool separatedOutputBuffers,

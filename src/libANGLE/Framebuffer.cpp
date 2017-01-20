@@ -852,7 +852,7 @@ bool Framebuffer::hasValidDepthStencil() const
 }
 
 void Framebuffer::setAttachment(GLenum type,
-                                GLenum binding, 
+                                GLenum binding,
                                 const ImageIndex &textureIndex,
                                 FramebufferAttachmentObject *resource)
 {

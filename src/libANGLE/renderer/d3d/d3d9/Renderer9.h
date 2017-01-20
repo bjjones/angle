@@ -241,12 +241,12 @@ class Renderer9 : public RendererD3D
                              bool separatedOutputBuffers,
                              ShaderExecutableD3D **outExecutable) override;
     gl::Error compileToExecutable(gl::InfoLog &infoLog,
-                                  std::string &shaderHLSL,
+                                  const std::string &shaderHLSL,
                                   ShaderType type,
                                   const std::vector<D3DVarying> &streamOutVaryings,
                                   bool separatedOutputBuffers,
                                   const D3DCompilerWorkarounds &workarounds,
-                                  ShaderExecutableD3D **outExectuable) override;
+                                  ShaderExecutableD3D **outExectuable);
     gl::Error ensureHLSLCompilerInitialized() override;
 
     UniformStorageD3D *createUniformStorage(size_t storageSize) override;
