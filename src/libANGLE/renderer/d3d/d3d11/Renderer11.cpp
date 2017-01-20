@@ -3555,29 +3555,29 @@ gl::Error Renderer11::loadExecutable(const void *function,
 }
 
 gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
-	const std::string &shaderHLSL,
-	ShaderType type,
-	const std::vector<D3DVarying> &streamOutVaryings,
-	bool separatedOutputBuffers,
-	const D3DCompilerWorkarounds &workarounds,
-	ShaderExecutableD3D **outExectuable)
+										  const std::string &shaderHLSL,
+									      ShaderType type,
+										  const std::vector<D3DVarying> &streamOutVaryings,
+										  bool separatedOutputBuffers,
+										  const D3DCompilerWorkarounds &workarounds,
+									      ShaderExecutableD3D **outExectuable)
 {
 	std::stringstream profileStream;
 
 	switch (type)
 	{
-	case SHADER_VERTEX:
-		profileStream << "vs";
-		break;
-	case SHADER_PIXEL:
-		profileStream << "ps";
-		break;
-	case SHADER_GEOMETRY:
-		profileStream << "gs";
-		break;
-	default:
-		UNREACHABLE();
-		return gl::Error(GL_INVALID_OPERATION);
+		case SHADER_VERTEX:
+			profileStream << "vs";
+			break;
+		case SHADER_PIXEL:
+			profileStream << "ps";
+			break;
+		case SHADER_GEOMETRY:
+			profileStream << "gs";
+			break;
+		default:
+			UNREACHABLE();
+			return gl::Error(GL_INVALID_OPERATION);
 	}
 
     profileStream << "_" << getMajorShaderModel() << "_" << getMinorShaderModel()
